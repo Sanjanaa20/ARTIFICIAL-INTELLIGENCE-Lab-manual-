@@ -1,78 +1,66 @@
-# ARTIFICIAL-INTELLIGENCE-Lab-manual-
+# ARTIFICIAL-INTELLIGENCE-PROGRAMS
 
-EX.NO.1
 
-STUDY OF PROLOG
+### TEMPERATURE CONVERSION
 
 AIM:
-To Study about Prolog
-STUDY:
-symbolic, non-numeric computation. suited for solving problems that involve objects and relations
-between objects
+To write predicates one converts centigrade temperature to Fahrenheit, other checks if a
+temperature is below freezing.
 
-Tom is a parent of Bob can be written in Prolog as:
-parent(tom, bob).
-parent as the name of a relation; tom and bob are its arguments.
-The whole Family Tree
-parent(pam, bob).
-parent(tom, bob).
-parent(tom, liz).
-parent(bob, ann).
-parent(bob, pat).
-parent(pat, jim).
-This program consists of six clauses.
-Prolog can be posed some questions about the parent relation
+Formula for Centigrade (C) temperatures to Fahrenheit (F) -
 
-6
+F = C * 9 / 5 + 32
+
+PROGRAM
+%ex3.pl
+%ctof converts C to F
+ctof(C,F):-F is C*9/5+32.
+%freezing function check the temperature
+freezing(F):-F=<32.
+OUTPUT:
+?- ctof(100,F).
+F = 212.
+?- freezing(20).
+true.
+?- freezing(40).
+false.
+
+Result: Thus, prolog program to convert centigrade temperature to Fahrenheit is executed successfully
+
+
+### FACTORIAL OF A NUMBER
+AIM: To write prolog program to find Factorial of a Given number.
+
+PROGRAM
+%ex4.pl
+fact(0,1).
+fact(N,F):-N>0,N1 is N-1,fact(N1,F1),F is N * F1.
 
 OUTPUT:
-?- parent(bob,pat).
-true.
-?- parent(liz,pat).
+?- fact(5,A).
+A = 120 .
+?- fact(10,B).
+B = 3628800
+?- fact(5,720).
 false.
-?- parent(tom,ben).
-false.
-?- parent(X,liz).
-X = tom.
-?- parent( bob, X).
-X = ann .
-?- parent( bob, X).
-X = ann ;
-X = pat.
-?- parent(X, Y).
-X = pam,
-Y = bob ;
-X = tom,
-Y = bob ;
-X = tom,
-Y = liz ;
-X = bob,
-Y = ann ;
-X = bob,
-Y = pat ;
-X = pat,
-Y = jim.
 
-The GRANDPARENT relation expressed as a
-composition of two parent relations.
+Result: Thus, prolog program to find factorial of a number is executed successfully.
 
-(1) Who is a parent of Jim? Assume that this is
-some Y.
-(2) Who is a parent of Y? Assume that this is
-some X.
-?- parent( Y, jim), parent( X, Y).
-Y = pat,
-X = bob
-̍?- parent( tom, X), parent( X, Y).
-X = bob,
-Y = ann ;
-X = bob,
-Y = pat ;
-Adding grandparent relation to the existing
-program
-grandparent(X,Y):-parent(X,Z),parent(Z,Y).
-?- grandparent(pam,pat).
-true.
-?- grandparent(pam,ann).
-true.
-?- grandparent(tom,ann).
+
+### GCD OF TWO NUMBERS
+AIM: To write prolog program to find GCD of two Numbers.
+
+PROGRAM
+%ex5.pl
+gcd(X,X,X).
+gcd(X,Y,D):- X < Y,Y1 is Y-X,gcd(X,Y1,D).
+gcd(X,Y,D):- Y < X,X1 is X-Y,gcd(X1,Y,D).
+OUTPUT:
+?- gcd(75,30,B).
+B = 15 .
+?- gcd(15,60,A).
+A = 15 .
+?- gcd(75,30,B).
+B = 15 .
+
+Result: Thus, prolog program to find GCD of two Numbers is executed Successfully.
