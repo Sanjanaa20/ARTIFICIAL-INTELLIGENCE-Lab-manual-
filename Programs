@@ -69,3 +69,294 @@ A = 15 .
 B = 15 .
 
 Result: Thus, prolog program to find GCD of two Numbers is executed Successfully.
+
+N-QUEEN PROBLEM
+
+AIM:
+To Write a Prolog program to solve N-Queens Problem
+PROCEDURE:
+-The problem here is to place eight queens on the empty chessboard in such a way that no queen
+attacks any other queen.
+- Represent the position by a list of eight items, each of them corresponding to one queen.
+- Each item in the list will specify a square of the board on which the corresponding queen is
+sitting.
+- Example: 1/4 → Queen 1 in 4th Position
+- Having chosen this representation, the problem is to find such a list of the form IX1/Y1, X2N2,
+X3/Y3, ..., X8/Y8l which satisfies the no-attack requirement.
+The solution relation can then be formulated by considering two cases
+Case 1: The list of queens is empty: the empty because there is no attack.
+Case 2: The list of queens is non-empty: then it looks like this: [X/Y | Othersl
+In case 2, the first queen is at some square X/Y and the other queens are at squares specified by the list
+others. If this is to be a solution then the following conditions must hold:
+There must be no attack between the queens in the list others; that is, Others itself must also be a
+solution.
+X and Y must be integers between 1 and 8.
+A queen at square X/Y must not attack any of the queens in the list Others
+noattack relation:
+(1) If the list Qlist is empty then the relation is certainly true because there is no queen to be attacked.
+(2) If Qlist is not empty then it has the form [Q1|Qlist1] and two conditions must be satisfied:
+(a) the queen at Q must not attack the queen at Q1, and
+(b) the queen at Q must not attack any of the queens in Qlist1
+To specify that a queen at some square does not attack another square is easy:
+The two squares must not be in the same row, the same column or the same diagonal
+our solution template guarantees that all the queens are in different columns
+- The Y-coordinates of the queens are different, and they are not in the same.
+
+- Diagonal, either upward or downward; that is, the distance between the squares in the X-
+direction must not be equal to that in the Y-direction.
+
+18
+
+PROGRAM:
+solution([]).
+solution([X/Y | Others]):-
+solution(Others),
+mem(Y,[1,2,3,4,5,6,7,8]),
+noattack(X/Y,Others).
+noattack(_,[]).
+noattack(X/Y,[X1/Y1 | Others]):-
+Y =\= Y1,
+Y1-Y =\= X1-X,
+Y1-Y =\= X-X1,
+noattack(X/Y,Others).
+mem(X,[X|_]).
+mem(X,[_|T]):-mem(X,T).
+template([1/Y1,2/Y2,3/Y3,4/Y4,5/Y5,6/Y6,7/Y7,8/Y8]).
+
+OUTPUT:
+?- template(S),solution(S).
+S = [1/4, 2/2, 3/7, 4/3, 5/6, 6/8, 7/5, 8/1] ;
+S = [1/5, 2/2, 3/4, 4/7, 5/3, 6/8, 7/6, 8/1]
+
+RESULT: Thus, N-Queen’s Problem solved by using prolog program.
+
+### DEPTH FIRST SEARCH
+
+AIM:
+To write a prolog program to implement Depth First Search.
+PROCEDURE:
+• Depth-first search is an algorithm used for traversing or searching a tree or graph data structure.
+• The algorithm starts at the root node and explores as far as possible along each branch before
+backtracking.
+• It works by maintaining a stack of nodes to visit, starting with the root node.
+• At each step, the algorithm pops the top node from the stack and visits its unvisited neighbors,
+pushing them onto the stack.
+• This process continues until the stack is empty or the goal node is found.
+PROGRAM:
+s(a,b).
+s(a,c).
+s(b,d).
+s(b,e).
+s(c,f).
+s(c,g).
+s(d,h).
+s(e,i).
+s(e,j).
+s(f,k).
+goal(f).
+goal(j).
+mem(X,[X|_]).
+mem(X,[_|Tail]):-mem(X,Tail).
+solve(Node,Solution):-
+dfs([],Node,Solution).
+dfs(Path,Node,[Node|Path]):-
+goal(Node).
+dfs(Path,Node,Sol):-
+s(Node,Node1),
+not(mem(Node1,Path)),
+dfs([Node|Path],Node1,Sol).
+
+OUTPUT:
+?- solve(a,S).
+S = [j, e, b, a] ;
+S = [f, c, a]
+
+BREADTH FIRST SEARCH
+
+AIM:
+To write a prolog program to implement Depth First Search.
+PROCEDURE:
+Breadth-First Search (BFS) is a graph traversal algorithm that explores all the vertices of a graph
+in breadth-first order, i.e., it visits all the nodes at the same depth before moving on to the nodes at the
+next depth.
+PROGRAM:
+s(a,b).
+s(a,c).
+s(b,d).
+s(b,e).
+s(c,f).
+s(c,g).
+s(d,h).
+s(e,i).
+s(e,j).
+s(f,k).
+goal(f).
+goal(j).
+solve(Start,Solution):-
+bfs([[Start]],Solution).
+bfs([[Node|Path]|_],[Node|Path]):-
+goal(Node).
+bfs([Path|Paths],Solution):-
+extend(Path,NewPaths),
+write(NewPaths),
+nl,
+conc(Paths,NewPaths,Paths1),bfs(Paths1,Solution).
+extend([Node|Path],NewPaths):-
+bagof([NewNode,Node|Path],(s(Node,NewNode),not(member(NewNode,[Node|Path]))),NewPaths),!.
+extend(_,[]).
+conc([],L,L).
+conc([X|L1],L2,[X|L3]):-nl,write('conc'),write(X),write(' '),write(L1),write(L2),conc(L1,L2,L3).
+
+OUTPUT:
+?- solve(a,S).
+[[b,a],[c,a]]
+[[d,b,a],[e,b,a]]
+conc[c,a] [][[d,b,a],[e,b,a]][[f,c,a],[g,c,a]]
+conc[d,b,a] [[e,b,a]][[f,c,a],[g,c,a]]
+conc[e,b,a] [][[f,c,a],[g,c,a]][[h,d,b,a]]
+conc[e,b,a] [[f,c,a],[g,c,a]][[h,d,b,a]]
+conc[f,c,a] [[g,c,a]][[h,d,b,a]]
+conc[g,c,a] [][[h,d,b,a]][[i,e,b,a],[j,e,b,a]]
+conc[f,c,a] [[g,c,a],[h,d,b,a]][[i,e,b,a],[j,e,b,a]]
+conc[g,c,a] [[h,d,b,a]][[i,e,b,a],[j,e,b,a]]
+conc[h,d,b,a] [][[i,e,b,a],[j,e,b,a]]
+S = [f, c, a] ;
+
+Result: Thus, the prolog program to implement BFS was executed Successfully.
+
+LIBRARY MANAGEMENT SYSTEM
+
+AIM:
+To write a Prolog program to simulate Library Management System.
+PROGRAM:
+% Define books with their properties
+book(harry_potter_1, jk_rowling, 1997, fantasy).
+book(harry_potter_2, jk_rowling, 1998, fantasy).
+book(harry_potter_3, jk_rowling, 1999, fantasy).
+book(the_hobbit, jrr_tolkien, 1937, fantasy).
+book(the_lord_of_the_rings, jrr_tolkien, 1954, fantasy).
+book(the_da_vinci_code, dan_brown, 2003, thriller).
+book(angels_and_demons, dan_brown, 2000, thriller).
+book(digital_fortress, dan_brown, 1998, thriller).
+book(the_girl_with_the_dragon_tattoo, stieg_larsson, 2005, mystery).
+book(the_girl_who_played_with_fire, stieg_larsson, 2006, mystery).
+book(the_girl_who_kicked_the_hornets_nest, stieg_larsson, 2007, mystery).
+% Define borrowers with their properties
+borrower(john, doe, 12345).
+borrower(jane, smith, 67890).
+borrower(jack, black, 24680).
+% Define the borrowed predicate
+borrowed(harry_potter_1, 12345).
+borrowed(the_hobbit, 67890).
+borrowed(the_da_vinci_code, 24680).
+borrowed(the_girl_with_the_dragon_tattoo, 12345).
+borrowed(the_girl_who_played_with_fire, 67890).
+% Define predicates for book search and borrower search
+find_book_by_title(Title, Author, Year, Genre) :-
+book(Title, Author, Year, Genre).
+find_book_by_author(Author, Title, Year, Genre) :-
+book(Title, Author, Year, Genre).
+find_borrower_by_id(Id, FirstName, LastName) :-
+borrower(FirstName, LastName, Id).
+list_borrowed_books :-
+borrowed(BookTitle, BorrowerId),
+find_book_by_title(BookTitle, Author, Year, Genre),
+find_borrower_by_id(BorrowerId, FirstName, LastName),
+format('Book: ~w, Author: ~w, Year: ~w, Genre: ~w, Borrower: ~w ~w~n', [BookTitle, Author, Year,
+Genre, FirstName, LastName]).
+OUTPUT:
+?- find_book_by_author(jk_rowling,A,Y,G).
+A = harry_potter_1,
+Y = 1997,
+G = fantasy .
+?- find_borrower_by_id(12345,A,B).
+A = john,
+B = doe.
+?- find_book_by_title(harry_potter_1,A,Y,G).
+A = jk_rowling,
+Y = 1997,
+G = fantasy.
+?- list_borrowed_books.
+Book: harry_potter_1, Author: jk_rowling, Year: 1997, Genre: fantasy, Borrower: john doe
+true ;
+Book: the_hobbit, Author: jrr_tolkien, Year: 1937, Genre: fantasy, Borrower: jane smith
+true
+
+RESULT: Thus, Library Management system is simulated using Prolog.
+
+TOWERS OF HANOI
+
+AIM:
+To Write a Prolog Program to solve Towers of Hanoi
+PROGRAM:
+% Prolog program to representation of 'Tower of Hanoi'
+move(1,X,Y,_) :-
+write('Move disk from '),
+write(X),
+write(' to '),
+write(Y),
+nl.
+move(N,X,Y,Z) :-
+N > 1,
+M is N - 1,
+move(M,X,Z,Y),
+move(1,X,Y,_),
+move(M,Z,Y,X).
+% Define a predicate to solve the Towers of Hanoi puzzle
+stoh(N) :-
+move(N,left,right,center).
+OUTPUT:
+?- stoh(3).
+Move disk from left to right
+Move disk from left to center
+Move disk from right to center
+Move disk from left to right
+Move disk from center to left
+Move disk from center to right
+Move disk from left to right
+true .
+
+RESULT: Thus, the Program to solve Towers of Hanoi was executed Successfully.
+
+CRYPT ARITHMETIC PROBLEM
+
+AIM:
+To Write a Prolog Program to solve Crypt Arithmetic Problem.
+S E N D
+M O R E
+___________
+M O N E Y
+____________
+PROGRAM:
+alpha1(S, E, N, D, M, O, R, Y, [S, E, N, D, M, O, R, E, M, O, N, E, Y]) :-
+between(1, 9, S),
+between(0, 9, E),
+E \=S,
+between(0, 9, N),
+N \= E, N \= S,
+between(0, 9, D),
+D \= N, D \= E, D \= S,
+between(1, 9, M),
+M \= D, M \= N, M \= E, M \= S,
+between(0, 9, O),
+O \= M, O \= D, O \= N, O \= E, O \= S,
+between(0, 9, R),
+R \= O, R \= M, R \= D, R \= N, R \= E, R \= S,
+between(0, 9, Y),
+Y \= R, Y \= O, Y \= M, Y \= D, Y \= N, Y \= E, Y \= S,
+Send is S*1000 + E*100 + N*10 + D,
+More is M*1000 + O*100 + R*10 + E,
+Money is M*10000 + O*1000 + N*100 + E*10 + Y,
+Money is Send + More.
+OUTPUT:
+?-alpha1(S, E, N, D, M, O, R, Y, Sol).
+S = 9,
+E = 5,
+N = 6,
+D = 7,
+M = 1,
+O = 0,
+R = 8,
+Y = 2,
+Sol = [9, 5, 6, 7, 1, 0, 8, 5, 1|...] ;
+RESULT: Thus, the Crypt Arithmetic Problem was solved by using Prolog
